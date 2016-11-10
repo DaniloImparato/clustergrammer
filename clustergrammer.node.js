@@ -175,7 +175,7 @@ module.exports =
 	    inst_nodes.forEach(function (d) {
 
 	      if (has_cats) {
-	        config.super_labels = true;
+	        // config.super_labels = true;
 	        config.super[inst_rc] = d.name.split(super_string)[0];
 	        d.name = d.name.split(super_string)[1];
 	      }
@@ -1054,7 +1054,7 @@ module.exports =
 	  viz.super_labels = {};
 	  viz.super_labels.margin = {};
 	  viz.super_labels.dim = {};
-	  viz.super_labels.margin.left = viz.grey_border_width;
+	  viz.super_labels.margin.left = viz.grey_border_width + 25;
 	  viz.super_labels.margin.top = viz.grey_border_width;
 	  viz.super_labels.dim.width = 0;
 	  if (params.labels.super_labels) {
@@ -1577,7 +1577,7 @@ module.exports =
 	  }
 
 	  viz.clust.dim = {};
-	  viz.clust.dim.width = ini_clust_width;
+	  viz.clust.dim.width = ini_clust_width * 1.025;
 
 	  return viz;
 	};

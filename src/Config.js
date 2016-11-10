@@ -27,7 +27,7 @@ module.exports = function make_config(args) {
     inst_nodes.forEach(function(d){
 
       if (has_cats){
-        config.super_labels = true;
+        // config.super_labels = true;
         config.super[inst_rc] = d.name.split(super_string)[0];
         d.name = d.name.split(super_string)[1];
       }

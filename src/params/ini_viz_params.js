@@ -52,7 +52,7 @@ module.exports = function ini_viz_params(params, preserve_cats=true){
   viz.super_labels = {};
   viz.super_labels.margin = {};
   viz.super_labels.dim = {};
-  viz.super_labels.margin.left = viz.grey_border_width;
+  viz.super_labels.margin.left = viz.grey_border_width + 25;
   viz.super_labels.margin.top  = viz.grey_border_width;
   viz.super_labels.dim.width = 0;
   if (params.labels.super_labels){

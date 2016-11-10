@@ -35,7 +35,7 @@ module.exports = function calc_clust_width(viz){
   }
 
   viz.clust.dim = {};
-  viz.clust.dim.width = ini_clust_width;
+  viz.clust.dim.width = ini_clust_width * 1.025;
 
   return viz;
 };
