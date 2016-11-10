@@ -7359,59 +7359,59 @@ var Clustergrammer =
 
 	module.exports = function play_demo() {
 
-	  var cgm = this;
-	  var params = cgm.params;
+	    var cgm = this;
+	    var params = cgm.params;
 
-	  if (d3.select(params.root + ' .running_demo').empty()) {
+	    if (d3.select(params.root + ' .running_demo').empty()) {
 
-	    // prevent more than one demo from running at once 
-	    d3.select(params.root + ' .play_button').classed('running_demo', true);
+	        // prevent more than one demo from running at once 
+	        d3.select(params.root + ' .play_button').classed('running_demo', true);
 
-	    toggle_play_button(params, false);
+	        toggle_play_button(params, false);
 
-	    // prevent user interaction while playing 
-	    $.blockUI({ css: {
-	        border: 'none',
-	        padding: '15px',
-	        backgroundColor: '#000',
-	        '-webkit-border-radius': '10px',
-	        '-moz-border-radius': '10px',
-	        opacity: 0,
-	        color: '#fff',
-	        cursor: 'default'
-	      } });
+	        // prevent user interaction while playing 
+	        $.blockUI({ css: {
+	                border: 'none',
+	                padding: '15px',
+	                backgroundColor: '#000',
+	                '-webkit-border-radius': '10px',
+	                '-moz-border-radius': '10px',
+	                opacity: 0,
+	                color: '#fff',
+	                cursor: 'default'
+	            } });
 
-	    d3.selectAll('.blockUI').style('opacity', 0);
+	        d3.selectAll('.blockUI').style('opacity', 0);
 
-	    // intro text 
-	    var inst_time = 750;
+	        // intro text 
+	        var inst_time = 750;
 
-	    if (cgm.params.viz.is_expand === false) {
-	      inst_time = run_segment(params, inst_time, quick_cluster);
-	      inst_time = inst_time - 1500;
+	        if (cgm.params.viz.is_expand === false) {
+	            inst_time = run_segment(params, inst_time, quick_cluster);
+	            inst_time = inst_time - 1500;
+	        }
+
+	        // clustergram interaction 
+	        ///////////////////////////////////
+	        inst_time = run_segment(params, inst_time, play_intro);
+	        inst_time = run_segment(params, inst_time, play_zoom);
+	        inst_time = run_segment(params, inst_time, play_reset_zoom);
+	        inst_time = run_segment(params, inst_time, play_categories);
+	        inst_time = run_segment(params, inst_time, play_reorder_row);
+
+	        // sidebar interaction 
+	        ///////////////////////////////////
+	        inst_time = run_segment(params, inst_time, play_menu_button);
+	        inst_time = run_segment(params, inst_time, play_groups);
+	        inst_time = run_segment(params, inst_time, play_reorder_buttons);
+	        inst_time = run_segment(params, inst_time, play_search);
+	        inst_time = run_segment(cgm, inst_time, play_filter);
+
+	        // conclusion 
+	        ///////////////////////////////////
+	        inst_time = run_segment(params, inst_time, quick_cluster);
+	        inst_time = run_segment(params, inst_time, play_conclusion);
 	    }
-
-	    // clustergram interaction 
-	    ///////////////////////////////////
-	    inst_time = run_segment(params, inst_time, play_intro);
-	    inst_time = run_segment(params, inst_time, play_zoom);
-	    inst_time = run_segment(params, inst_time, play_reset_zoom);
-	    inst_time = run_segment(params, inst_time, play_categories);
-	    inst_time = run_segment(params, inst_time, play_reorder_row);
-
-	    // sidebar interaction 
-	    ///////////////////////////////////
-	    inst_time = run_segment(params, inst_time, play_menu_button);
-	    inst_time = run_segment(params, inst_time, play_groups);
-	    inst_time = run_segment(params, inst_time, play_reorder_buttons);
-	    inst_time = run_segment(params, inst_time, play_search);
-	    inst_time = run_segment(cgm, inst_time, play_filter);
-
-	    // conclusion 
-	    ///////////////////////////////////
-	    inst_time = run_segment(params, inst_time, quick_cluster);
-	    inst_time = run_segment(params, inst_time, play_conclusion);
-	  }
 		};
 
 /***/ },
@@ -9150,70 +9150,70 @@ var Clustergrammer =
 
 	module.exports = function modify_row_node_cats(cat_data, inst_nodes) {
 
-	  var cat_type_num = 0;
-	  var inst_index = 0;
-	  var inst_cat_title;
-	  var inst_cats;
-	  var inst_members;
-	  var inst_name;
-	  var inst_category;
-	  var inst_cat_name;
-	  var inst_full_cat;
-	  var inst_cat_num;
+	      var cat_type_num = 0;
+	      var inst_index = 0;
+	      var inst_cat_title;
+	      var inst_cats;
+	      var inst_members;
+	      var inst_name;
+	      var inst_category;
+	      var inst_cat_name;
+	      var inst_full_cat;
+	      var inst_cat_num;
 
-	  // loop through row nodes
-	  //////////////////////////
-	  _.each(inst_nodes, function (inst_node) {
+	      // loop through row nodes
+	      //////////////////////////
+	      _.each(inst_nodes, function (inst_node) {
 
-	    inst_name = inst_node.name;
-	    inst_name = inst_name.toUpperCase();
+	            inst_name = inst_node.name;
+	            inst_name = inst_name.toUpperCase();
 
-	    cat_type_num = 0;
+	            cat_type_num = 0;
 
-	    remove_node_cats(inst_node);
+	            remove_node_cats(inst_node);
 
-	    // loop through each category type
-	    _.each(cat_data, function (inst_cat_data) {
+	            // loop through each category type
+	            _.each(cat_data, function (inst_cat_data) {
 
-	      inst_cat_title = inst_cat_data.cat_title;
-	      inst_cats = inst_cat_data.cats;
+	                  inst_cat_title = inst_cat_data.cat_title;
+	                  inst_cats = inst_cat_data.cats;
 
-	      // initialize with no category
-	      inst_category = 'false';
-	      inst_index = -1;
+	                  // initialize with no category
+	                  inst_category = 'false';
+	                  inst_index = -1;
 
-	      inst_cat_num = 0;
-	      // loop through each category in the category-type
-	      _.each(inst_cats, function (inst_cat) {
+	                  inst_cat_num = 0;
+	                  // loop through each category in the category-type
+	                  _.each(inst_cats, function (inst_cat) {
 
-	        inst_cat_name = inst_cat.cat_name;
-	        inst_members = inst_cat.members;
+	                        inst_cat_name = inst_cat.cat_name;
+	                        inst_members = inst_cat.members;
 
-	        // add category if node is a member
-	        if (_.contains(inst_members, inst_name)) {
+	                        // add category if node is a member
+	                        if (_.contains(inst_members, inst_name)) {
 
-	          inst_category = inst_cat_name;
-	          inst_index = inst_cat_num;
-	        }
+	                              inst_category = inst_cat_name;
+	                              inst_index = inst_cat_num;
+	                        }
 
-	        inst_cat_num = inst_cat_num + 1;
+	                        inst_cat_num = inst_cat_num + 1;
+	                  });
+
+	                  if (utils.has(inst_cat_data, 'pval')) {
+
+	                        var inst_pval = inst_cat_data.pval.toExponential();
+	                        inst_full_cat = inst_cat_title + ': ' + inst_category + '; Pval ' + String(inst_pval);
+	                  } else {
+
+	                        inst_full_cat = inst_cat_title + ': ' + inst_category;
+	                  }
+
+	                  inst_node['cat-' + String(cat_type_num)] = inst_full_cat;
+	                  inst_node['cat_' + String(cat_type_num) + '_index'] = inst_index;
+
+	                  cat_type_num = cat_type_num + 1;
+	            });
 	      });
-
-	      if (utils.has(inst_cat_data, 'pval')) {
-
-	        var inst_pval = inst_cat_data.pval.toExponential();
-	        inst_full_cat = inst_cat_title + ': ' + inst_category + '; Pval ' + String(inst_pval);
-	      } else {
-
-	        inst_full_cat = inst_cat_title + ': ' + inst_category;
-	      }
-
-	      inst_node['cat-' + String(cat_type_num)] = inst_full_cat;
-	      inst_node['cat_' + String(cat_type_num) + '_index'] = inst_index;
-
-	      cat_type_num = cat_type_num + 1;
-	    });
-	  });
 		};
 
 /***/ },
@@ -10932,7 +10932,7 @@ var Clustergrammer =
 
 
 	// module
-	exports.push([module.id, ".d3-slider {\n    position: relative;\n    font-family: Verdana,Arial,sans-serif;\n    font-size: 1.1em;\n    border: 1px solid #aaaaaa;\n    z-index: 2;\n}\n\n.d3-slider-horizontal {\n    height: .8em;\n}  \n\n.d3-slider-range {\n  background:#2980b9;\n  left:0px;\n  right:0px;\n  height: 0.8em;\n  position: absolute;\n}\n\n.d3-slider-range-vertical {\n  background:#2980b9;\n  left:0px;\n  right:0px;\n  position: absolute;\n  top:0;\n}\n\n.d3-slider-vertical {\n    width: .8em;\n    height: 100px;\n}      \n\n.d3-slider-handle {\n    position: absolute;\n    width: 1.2em;\n    height: 1.2em;\n    border: 1px solid #d3d3d3;\n    border-radius: 4px;\n    background: #eee;\n    background: linear-gradient(to bottom, #eee 0%, #ddd 100%);\n    z-index: 3;\n}\n\n.d3-slider-handle:hover {\n    border: 1px solid #999999;\n}\n\n.d3-slider-horizontal .d3-slider-handle {\n    top: -.3em;\n    margin-left: -.6em;\n}\n\n.d3-slider-axis {\n    position: relative;\n    z-index: 1;    \n}\n\n.d3-slider-axis-bottom {\n    top: .8em;\n}\n\n.d3-slider-axis-right {\n    left: .8em;\n}\n\n.d3-slider-axis path {\n    stroke-width: 0;\n    fill: none;\n}\n\n.d3-slider-axis line {\n    fill: none;\n    stroke: #aaa;\n    shape-rendering: crispEdges;\n}\n\n.d3-slider-axis text {\n    font-size: 11px;\n}\n\n.d3-slider-vertical .d3-slider-handle {\n    left: -.25em;\n    margin-left: 0;\n    margin-bottom: -.6em;      \n}", ""]);
+	exports.push([module.id, ".d3-slider {\r\n    position: relative;\r\n    font-family: Verdana,Arial,sans-serif;\r\n    font-size: 1.1em;\r\n    border: 1px solid #aaaaaa;\r\n    z-index: 2;\r\n}\r\n\r\n.d3-slider-horizontal {\r\n    height: .8em;\r\n}  \r\n\r\n.d3-slider-range {\r\n  background:#2980b9;\r\n  left:0px;\r\n  right:0px;\r\n  height: 0.8em;\r\n  position: absolute;\r\n}\r\n\r\n.d3-slider-range-vertical {\r\n  background:#2980b9;\r\n  left:0px;\r\n  right:0px;\r\n  position: absolute;\r\n  top:0;\r\n}\r\n\r\n.d3-slider-vertical {\r\n    width: .8em;\r\n    height: 100px;\r\n}      \r\n\r\n.d3-slider-handle {\r\n    position: absolute;\r\n    width: 1.2em;\r\n    height: 1.2em;\r\n    border: 1px solid #d3d3d3;\r\n    border-radius: 4px;\r\n    background: #eee;\r\n    background: linear-gradient(to bottom, #eee 0%, #ddd 100%);\r\n    z-index: 3;\r\n}\r\n\r\n.d3-slider-handle:hover {\r\n    border: 1px solid #999999;\r\n}\r\n\r\n.d3-slider-horizontal .d3-slider-handle {\r\n    top: -.3em;\r\n    margin-left: -.6em;\r\n}\r\n\r\n.d3-slider-axis {\r\n    position: relative;\r\n    z-index: 1;    \r\n}\r\n\r\n.d3-slider-axis-bottom {\r\n    top: .8em;\r\n}\r\n\r\n.d3-slider-axis-right {\r\n    left: .8em;\r\n}\r\n\r\n.d3-slider-axis path {\r\n    stroke-width: 0;\r\n    fill: none;\r\n}\r\n\r\n.d3-slider-axis line {\r\n    fill: none;\r\n    stroke: #aaa;\r\n    shape-rendering: crispEdges;\r\n}\r\n\r\n.d3-slider-axis text {\r\n    font-size: 11px;\r\n}\r\n\r\n.d3-slider-vertical .d3-slider-handle {\r\n    left: -.25em;\r\n    margin-left: 0;\r\n    margin-bottom: -.6em;      \r\n}", ""]);
 
 	// exports
 
@@ -11560,7 +11560,7 @@ var Clustergrammer =
 	    'zscore': 'Z-score'
 	  };
 
-	  buttons.selectAll('button').data(filter_options).enter().append('button').attr('type', 'button').classed('btn', true).classed('btn-primary', true).classed('.filter_button', true).classed('active', function (d) {
+	  buttons.selectAll('button').data(filter_options).enter().append('button').attr('type', 'button').classed('btn', true).classed('btn-default', true).classed('.filter_button', true).classed('active', function (d) {
 	    var is_active = false;
 	    if (d == 'combined_score') {
 	      is_active = true;
@@ -11632,7 +11632,7 @@ var Clustergrammer =
 
 	  search_container.append('input').classed('form-control', true).classed('gene_search_box', true).classed('sidebar_text', true).attr('type', 'text').attr('placeholder', params.sidebar.row_search.placeholder).style('height', params.sidebar.row_search.box.height + 'px');
 
-	  search_container.append('div').classed('gene_search_button', true).style('margin-top', '5px').attr('data-toggle', 'buttons').append('button').classed('sidebar_text', true).html('Search').attr('type', 'button').classed('btn', true).classed('btn-primary', true).classed('submit_gene_button', true).style('width', '100%').style('font-size', '14px');
+	  search_container.append('div').classed('gene_search_button', true).style('margin-top', '5px').attr('data-toggle', 'buttons').append('button').classed('sidebar_text', true).html('Search').attr('type', 'button').classed('btn', true).classed('btn-default', true).classed('submit_gene_button', true).style('width', '100%').style('font-size', '14px');
 		};
 
 /***/ },
@@ -11714,7 +11714,7 @@ var Clustergrammer =
 
 	    inst_reorder = reorder_section.append('div').classed('btn-group-vertical', true).style('width', '100%').classed('toggle_' + inst_rc + '_order', true).attr('role', 'group');
 
-	    inst_reorder.selectAll('.button').data(possible_orders).enter().append('button').attr('type', 'button').classed('btn', true).classed('btn-primary', true).classed('sidebar_button_text', true).classed('active', function (d) {
+	    inst_reorder.selectAll('.button').data(possible_orders).enter().append('button').attr('type', 'button').classed('btn', true).classed('btn-default', true).classed('sidebar_button_text', true).classed('active', function (d) {
 	      is_active = false;
 	      if (d == params.viz.inst_order[other_rc]) {
 	        is_active = true;
@@ -11738,34 +11738,34 @@ var Clustergrammer =
 
 	module.exports = function set_sidebar_ini_view(params) {
 
-	  _.each(_.keys(params.ini_view), function (inst_filter) {
+	    _.each(_.keys(params.ini_view), function (inst_filter) {
 
-	    // initialize filter slider using ini_view
-	    var inst_value = params.ini_view[inst_filter];
+	        // initialize filter slider using ini_view
+	        var inst_value = params.ini_view[inst_filter];
 
-	    var filter_type = params.viz.possible_filters[inst_filter];
+	        var filter_type = params.viz.possible_filters[inst_filter];
 
-	    if (filter_type === 'numerical') {
+	        if (filter_type === 'numerical') {
 
-	      if (inst_value != 'all') {
-	        inst_value = parseInt(inst_value, 10);
-	      }
+	            if (inst_value != 'all') {
+	                inst_value = parseInt(inst_value, 10);
+	            }
 
-	      if (params.viz.filter_data[inst_filter].indexOf(inst_value) <= -1) {
-	        inst_value = 'all';
-	      }
+	            if (params.viz.filter_data[inst_filter].indexOf(inst_value) <= -1) {
+	                inst_value = 'all';
+	            }
 
-	      var filter_title = make_filter_title(params, inst_filter);
+	            var filter_title = make_filter_title(params, inst_filter);
 
-	      d3.select(params.root + ' .title_' + inst_filter).text(filter_title.text + inst_value + filter_title.suffix);
+	            d3.select(params.root + ' .title_' + inst_filter).text(filter_title.text + inst_value + filter_title.suffix);
 
-	      d3.select(params.root + ' .slider_' + inst_filter).attr('current_state', inst_value);
-	    } else {
+	            d3.select(params.root + ' .slider_' + inst_filter).attr('current_state', inst_value);
+	        } else {
 
-	      // set up button initialization
+	            // set up button initialization
 
-	    }
-	  });
+	        }
+	    });
 		};
 
 /***/ },
