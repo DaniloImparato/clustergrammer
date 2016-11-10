@@ -27,7 +27,7 @@ module.exports = function set_up_search(sidebar, params ){
     .html('Search')
     .attr('type','button')
     .classed('btn',true)
-    .classed('btn-primary',true)
+    .classed('btn-default',true)
     .classed('submit_gene_button',true)
     .style('width', '100%')
     .style('font-size', '14px');

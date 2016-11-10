@@ -93,7 +93,7 @@ module.exports = function set_up_reorder(params, sidebar){
       .append('button')
       .attr('type','button')
       .classed('btn',true)
-      .classed('btn-primary',true)
+      .classed('btn-default',true)
       .classed('sidebar_button_text',true)
       .classed('active', function(d){
         is_active = false;

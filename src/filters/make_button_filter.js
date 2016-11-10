@@ -31,7 +31,7 @@ module.exports = function make_button_filter(config, params, filter_type, div_fi
     .append('button')
     .attr('type','button')
     .classed('btn',true)
-    .classed('btn-primary',true)
+    .classed('btn-default',true)
     .classed('.filter_button',true)
     .classed('active', function(d){
       var is_active = false;
