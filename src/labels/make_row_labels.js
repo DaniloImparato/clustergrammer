@@ -67,6 +67,20 @@ module.exports = function make_row_labels(cgm, row_names='all', text_delay = 0){
 
     });
 
+  row_labels
+    .on('click', function(d) {
+
+      var data_attr = '__data__';
+      var row_name = this[data_attr].name;
+
+      console.log(row_name);
+
+      if (params.tile_click_hlight){
+        add_row_click_hlight(this,d.ini);
+      }
+
+    });
+
   make_row_tooltips(params);
 
   // append rectangle behind text

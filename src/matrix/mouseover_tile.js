@@ -3,7 +3,7 @@ module.exports = function mouseover_tile(params, inst_selection, tip, inst_argum
   var inst_data = inst_arguments[0];
   var args = [].slice.call(inst_arguments);
   var timeout;
-  var delay = 1000;
+  var delay = 100;
 
   d3.select(inst_selection)
     .classed('hovering', true);
