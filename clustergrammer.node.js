@@ -2924,7 +2924,7 @@ module.exports =
 
 	  d3.selectAll('#sex_f, #sex_m').style('display', 'none');
 
-	  d3.selectAll("g[id^='tissue_']").classed('highlight', false);
+	  d3.selectAll("[id^='tissue_']").classed('highlight', false);
 
 	  d3.select('#tissue-label').text('');
 

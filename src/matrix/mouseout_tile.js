@@ -9,7 +9,7 @@ module.exports = function mouseout_tile(params, inst_selection, tip){
   d3.selectAll('#sex_f, #sex_m')
     .style('display','none');
 
-  d3.selectAll("g[id^='tissue_']")
+  d3.selectAll("[id^='tissue_']")
     .classed('highlight',false);
 
   d3.select('#tissue-label')
