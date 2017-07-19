@@ -75,9 +75,11 @@ module.exports = function make_row_labels(cgm, row_names='all', text_delay = 0){
 
       console.log(row_name);
 
-      if (params.tile_click_hlight){
-        add_row_click_hlight(this,d.ini);
-      }
+      d3.select(this)
+        .select('rect')
+        .style('opacity', function(){          
+          return d3.select(this).style('opacity') == 1 ? 0 : 1;
+        });
 
     });
 
