@@ -102,6 +102,7 @@ module.exports = function row_reorder(cgm, row_selection, inst_row) {
       // highlight column name
       d3.select(row_selection)
         .select('rect')
+        .style('fill', 'yellow')
         .style('opacity', 1);
 
       reposition_tile_highlight(params);

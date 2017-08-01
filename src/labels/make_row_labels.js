@@ -77,6 +77,7 @@ module.exports = function make_row_labels(cgm, row_names='all', text_delay = 0){
 
       d3.select(this)
         .select('rect')
+        .style('fill', 'green')
         .style('opacity', function(){          
           return d3.select(this).style('opacity') == 1 ? 0 : 1;
         });

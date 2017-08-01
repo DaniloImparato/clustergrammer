@@ -3432,7 +3432,7 @@ module.exports =
 
 	    console.log(row_name);
 
-	    d3.select(this).select('rect').style('opacity', function () {
+	    d3.select(this).select('rect').style('fill', 'green').style('opacity', function () {
 	      return d3.select(this).style('opacity') == 1 ? 0 : 1;
 	    });
 	  });
@@ -3615,7 +3615,7 @@ module.exports =
 	    // unhilight and unbold all columns (already unbolded earlier)
 	    d3.selectAll(params.root + ' .row_label_group').select('rect').style('opacity', 0);
 	    // highlight column name
-	    d3.select(row_selection).select('rect').style('opacity', 1);
+	    d3.select(row_selection).select('rect').style('fill', 'yellow').style('opacity', 1);
 
 	    reposition_tile_highlight(params);
 
