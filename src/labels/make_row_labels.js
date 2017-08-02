@@ -2,6 +2,7 @@ var utils = require('../Utils_clust');
 var add_row_click_hlight = require('./add_row_click_hlight');
 var row_reorder = require('../reorder/row_reorder');
 var make_row_tooltips = require('./make_row_tooltips');
+var add_selected_gene = require('../cajadb/add_selected_gene');
 
 module.exports = function make_row_labels(cgm, row_names='all', text_delay = 0){
 
@@ -74,6 +75,7 @@ module.exports = function make_row_labels(cgm, row_names='all', text_delay = 0){
       var row_name = this[data_attr].name;
 
       console.log(row_name);
+      add_selected_gene(row_name);
 
       d3.select(this)
         .select('rect')
