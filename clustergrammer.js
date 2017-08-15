@@ -3376,6 +3376,8 @@ var Clustergrammer =
 	  var params = cgm.params;
 	  var row_nodes = [];
 
+	  params.gene_data = {};
+
 	  if (row_names === 'all') {
 	    row_nodes = params.network_data.row_nodes;
 	  } else {
@@ -3426,17 +3428,49 @@ var Clustergrammer =
 	    }
 	  });
 
-	  row_labels.on('click', function (d) {
+	  row_labels.on('click', function (d, i) {
 
 	    var data_attr = '__data__';
 	    var row_name = this[data_attr].name;
 
-	    console.log(row_name);
-	    add_selected_gene(row_name);
+	    // console.log(row_name);
+	    // add_selected_gene(row_name);
 
-	    d3.select(this).select('rect').style('fill', 'pink').style('opacity', function () {
-	      return d3.select(this).style('opacity') == 1 ? 0 : 1;
+	    // d3.select(this)
+	    //   .select('rect')
+	    //   .style('fill', 'pink')
+	    //   .style('opacity', function(){          
+	    //     return d3.select(this).style('opacity') == 1 ? 0 : 1;
+	    //   });
+
+	    // toggle gene info modal
+	    //////////////////////////
+	    $.get('https://amp.pharm.mssm.edu/Harmonizome/api/1.0/gene/' + row_name, function (data) {
+
+	      data = JSON.parse(data);
+
+	      // save data for repeated use
+	      params.gene_data[row_name] = {};
+	      params.gene_data[row_name].name = data.name;
+	      params.gene_data[row_name].description = data.description;
+
+	      $(params.root + ' .gene_info').modal('toggle');
+
+	      d3.select(params.root + ' .gene_info h4').html(row_name + ': ' + data.name);
+
+	      d3.select(params.root + ' .gene_info p.gene_text').text(data.description);
 	    });
+
+	    // var inst_selector = '.dendro_info';
+
+	    // remove old graphs
+	    // d3.select('.dendro_info .cluster_info_container .cat_graph')
+	    //   .remove();
+
+	    console.log(d, i);
+	    // if ( params.viz.cat_info[inst_rc] !== null ){
+	    //   make_cat_breakdown_graph(params, inst_rc, d, dendro_info[i], inst_selector);
+	    // }
 	  });
 
 	  make_row_tooltips(params);
@@ -14827,6 +14861,19 @@ var Clustergrammer =
 	  dendro_modal.body.append('g').classed('cluster_info_container', true);
 
 	  dendro_modal.body.append('div').classed('dendro_text', true).append('input').classed('bootstrap_highlight', true).classed('current_names', true).style('width', '100%');
+
+	  // gene info modal
+	  ///////////////////////////////////////
+	  var gene_modal = make_modal_skeleton(params, 'gene_info');
+
+	  gene_modal.header.append('h4').classed('modal-title', true).html('Gene information');
+
+	  gene_modal.body.append('g').classed('cluster_info_container', true);
+
+	  gene_modal.body.append('div').append('p').classed('gene_text', true);
+	  // .classed('bootstrap_highlight', true)
+	  // .classed('current_names', true)
+	  // .style('width', '100%');
 		};
 
 /***/ }),

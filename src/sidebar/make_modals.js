@@ -55,4 +55,25 @@ module.exports = function ini_modals(params){
     .classed('current_names', true)
     .style('width', '100%');
 
+  // gene info modal
+  ///////////////////////////////////////
+  var gene_modal = make_modal_skeleton(params, 'gene_info');
+
+  gene_modal.header
+    .append('h4')
+    .classed('modal-title', true)
+    .html('Gene information');
+
+  gene_modal.body
+    .append('g')
+    .classed('cluster_info_container', true);
+
+  gene_modal.body
+    .append('div')
+    .append('p')
+    .classed('gene_text', true);
+    // .classed('bootstrap_highlight', true)
+    // .classed('current_names', true)
+    // .style('width', '100%');
+
 };
