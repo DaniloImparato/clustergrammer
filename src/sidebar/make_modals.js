@@ -72,8 +72,10 @@ module.exports = function ini_modals(params){
     .append('div')
     .append('p')
     .classed('gene_text', true);
-    // .classed('bootstrap_highlight', true)
-    // .classed('current_names', true)
-    // .style('width', '100%');
+  
+  gene_modal.body.select('div')
+    .append('a')
+    .attr("xlink:href", "#")
+    .classed('splicing_link', true);
 
 };
