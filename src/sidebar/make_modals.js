@@ -73,9 +73,10 @@ module.exports = function ini_modals(params){
     .append('p')
     .classed('gene_text', true);
   
-  gene_modal.body.select('div')
+  gene_modal.body
     .append('a')
+    .classed('splicing_link', true)
     .attr("xlink:href", "#")
-    .classed('splicing_link', true);
+    .html('Splicing info');
 
 };

@@ -106,7 +106,10 @@ module.exports = function make_row_labels(cgm, row_names='all', text_delay = 0){
             .text(data.description);
 
           d3.select(params.root+' .gene_info a.splicing_link')
-            .attr("xlink:href", "splicing/"+data.name);
+            .attr("xlink:href", "splicing/"+row_name)
+            .on('click', function(){
+              window.open("splicing/"+row_name, '_blank' )
+            });
 
         });
 

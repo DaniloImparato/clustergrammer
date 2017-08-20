@@ -3459,18 +3459,11 @@ var Clustergrammer =
 	      d3.select(params.root + ' .gene_info h4').html(row_name + ': ' + data.name);
 
 	      d3.select(params.root + ' .gene_info p.gene_text').text(data.description);
+
+	      d3.select(params.root + ' .gene_info a.splicing_link').attr("xlink:href", "splicing/" + row_name).on('click', function () {
+	        window.open("splicing/" + row_name, '_blank');
+	      });
 	    });
-
-	    // var inst_selector = '.dendro_info';
-
-	    // remove old graphs
-	    // d3.select('.dendro_info .cluster_info_container .cat_graph')
-	    //   .remove();
-
-	    console.log(d, i);
-	    // if ( params.viz.cat_info[inst_rc] !== null ){
-	    //   make_cat_breakdown_graph(params, inst_rc, d, dendro_info[i], inst_selector);
-	    // }
 	  });
 
 	  make_row_tooltips(params);
@@ -14871,9 +14864,8 @@ var Clustergrammer =
 	  gene_modal.body.append('g').classed('cluster_info_container', true);
 
 	  gene_modal.body.append('div').append('p').classed('gene_text', true);
-	  // .classed('bootstrap_highlight', true)
-	  // .classed('current_names', true)
-	  // .style('width', '100%');
+
+	  gene_modal.body.append('a').classed('splicing_link', true).attr("xlink:href", "#").html('Splicing info');
 		};
 
 /***/ }),
