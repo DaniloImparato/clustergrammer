@@ -79,4 +79,22 @@ module.exports = function ini_modals(params){
     .attr("xlink:href", "#")
     .html('Splicing info');
 
+
+  // string network modal
+  ///////////////////////////////////////
+  var string_modal = make_modal_skeleton(params, 'string_info');
+
+  string_modal.header
+    .append('h4')
+    .classed('modal-title', true)
+    .html('Requesting StringDB data');
+
+  string_modal.body
+    .append('g')
+    .classed('cluster_info_container', true);
+
+  string_modal.body
+    .append('div')
+    .classed('gene_text', true);
+
 };

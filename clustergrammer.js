@@ -3559,121 +3559,121 @@ var Clustergrammer =
 
 	module.exports = function row_reorder(cgm, row_selection, inst_row) {
 
-	      var params = cgm.params;
-	      var prev_zoom = get_previous_zoom(params);
+	  var params = cgm.params;
+	  var prev_zoom = get_previous_zoom(params);
 
-	      if (prev_zoom.zoom_y === 1 && prev_zoom.zoom_x === 1) {
+	  if (prev_zoom.zoom_y === 1 && prev_zoom.zoom_x === 1) {
 
-	            params.viz.inst_order.row = 'custom';
-	            toggle_dendro_view(cgm, 'col');
+	    params.viz.inst_order.row = 'custom';
+	    toggle_dendro_view(cgm, 'col');
 
-	            d3.selectAll(params.root + ' .toggle_col_order .btn').classed('active', false);
+	    d3.selectAll(params.root + ' .toggle_col_order .btn').classed('active', false);
 
-	            params.viz.run_trans = true;
+	    params.viz.run_trans = true;
 
-	            var mat = $.extend(true, {}, params.matrix.matrix);
-	            var row_nodes = params.network_data.row_nodes;
-	            var col_nodes = params.network_data.col_nodes;
+	    var mat = $.extend(true, {}, params.matrix.matrix);
+	    var row_nodes = params.network_data.row_nodes;
+	    var col_nodes = params.network_data.col_nodes;
 
-	            // find the index of the row
-	            var tmp_arr = [];
-	            row_nodes.forEach(function (node) {
-	                  tmp_arr.push(node.name);
-	            });
+	    // find the index of the row
+	    var tmp_arr = [];
+	    row_nodes.forEach(function (node) {
+	      tmp_arr.push(node.name);
+	    });
 
-	            // find index
-	            inst_row = _.indexOf(tmp_arr, inst_row);
+	    // find index
+	    inst_row = _.indexOf(tmp_arr, inst_row);
 
-	            // gather the values of the input genes
-	            tmp_arr = [];
-	            col_nodes.forEach(function (node, index) {
-	                  tmp_arr.push(mat[inst_row].row_data[index].value);
-	            });
+	    // gather the values of the input genes
+	    tmp_arr = [];
+	    col_nodes.forEach(function (node, index) {
+	      tmp_arr.push(mat[inst_row].row_data[index].value);
+	    });
 
-	            // sort the rows
-	            var tmp_sort = d3.range(tmp_arr.length).sort(function (a, b) {
-	                  return tmp_arr[b] - tmp_arr[a];
-	            });
+	    // sort the rows
+	    var tmp_sort = d3.range(tmp_arr.length).sort(function (a, b) {
+	      return tmp_arr[b] - tmp_arr[a];
+	    });
 
-	            // resort cols (cols are reorderd by double clicking a row)
-	            params.viz.x_scale.domain(tmp_sort);
+	    // resort cols (cols are reorderd by double clicking a row)
+	    params.viz.x_scale.domain(tmp_sort);
 
-	            // save to custom col order
-	            params.matrix.orders.custom_row = tmp_sort;
+	    // save to custom col order
+	    params.matrix.orders.custom_row = tmp_sort;
 
-	            // reorder matrix
-	            ////////////////////
-	            var t;
-	            if (params.network_data.links.length > params.matrix.def_large_matrix) {
-	                  t = d3.select(params.root + ' .viz_svg');
-	            } else {
-	                  t = d3.select(params.root + ' .viz_svg').transition().duration(2500);
-	            }
+	    // reorder matrix
+	    ////////////////////
+	    var t;
+	    if (params.network_data.links.length > params.matrix.def_large_matrix) {
+	      t = d3.select(params.root + ' .viz_svg');
+	    } else {
+	      t = d3.select(params.root + ' .viz_svg').transition().duration(2500);
+	    }
 
-	            var col_nodes_names = params.network_data.col_nodes_names;
+	    var col_nodes_names = params.network_data.col_nodes_names;
 
-	            // Move Col Labels
-	            t.select('.col_zoom_container').selectAll('.col_label_text').attr('transform', function (d) {
-	                  var inst_index = _.indexOf(col_nodes_names, d.name);
-	                  return 'translate(' + params.viz.x_scale(inst_index) + ')rotate(-90)';
-	            });
+	    // Move Col Labels
+	    t.select('.col_zoom_container').selectAll('.col_label_text').attr('transform', function (d) {
+	      var inst_index = _.indexOf(col_nodes_names, d.name);
+	      return 'translate(' + params.viz.x_scale(inst_index) + ')rotate(-90)';
+	    });
 
-	            // reorder col_class groups
-	            t.selectAll('.col_cat_group').attr('transform', function (d) {
-	                  var inst_index = _.indexOf(col_nodes_names, d.name);
-	                  return 'translate(' + params.viz.x_scale(inst_index) + ',0)';
-	            });
+	    // reorder col_class groups
+	    t.selectAll('.col_cat_group').attr('transform', function (d) {
+	      var inst_index = _.indexOf(col_nodes_names, d.name);
+	      return 'translate(' + params.viz.x_scale(inst_index) + ',0)';
+	    });
 
-	            // reorder tiles in matrix (do not change row order)
-	            if (params.viz.ds_level === -1) {
-	                  t.selectAll('.tile').attr('transform', function (d) {
-	                        return 'translate(' + params.viz.x_scale(d.pos_x) + ',0)';
-	                  });
+	    // reorder tiles in matrix (do not change row order)
+	    if (params.viz.ds_level === -1) {
+	      t.selectAll('.tile').attr('transform', function (d) {
+	        return 'translate(' + params.viz.x_scale(d.pos_x) + ',0)';
+	      });
 
-	                  t.selectAll('.tile_up').attr('transform', function (d) {
-	                        return 'translate(' + params.viz.x_scale(d.pos_x) + ',0)';
-	                  });
+	      t.selectAll('.tile_up').attr('transform', function (d) {
+	        return 'translate(' + params.viz.x_scale(d.pos_x) + ',0)';
+	      });
 
-	                  t.selectAll('.tile_dn').attr('transform', function (d) {
-	                        return 'translate(' + params.viz.x_scale(d.pos_x) + ',0)';
-	                  });
-	            }
+	      t.selectAll('.tile_dn').attr('transform', function (d) {
+	        return 'translate(' + params.viz.x_scale(d.pos_x) + ',0)';
+	      });
+	    }
 
-	            // highlight selected row
-	            ///////////////////////////////
-	            // unhilight and unbold all columns (already unbolded earlier)
-	            d3.selectAll(params.root + ' .row_label_group').select('rect').style('opacity', 0);
-	            // highlight column name
-	            d3.select(row_selection).select('rect').style('fill', 'yellow').style('opacity', 1);
+	    // highlight selected row
+	    ///////////////////////////////
+	    // unhilight and unbold all columns (already unbolded earlier)
+	    d3.selectAll(params.root + ' .row_label_group').select('rect').style('opacity', 0);
+	    // highlight column name
+	    d3.select(row_selection).select('rect').style('fill', 'yellow').style('opacity', 1);
 
-	            reposition_tile_highlight(params);
+	    reposition_tile_highlight(params);
 
-	            // redefine x and y positions
-	            params.network_data.links.forEach(function (d) {
-	                  d.x = params.viz.x_scale(d.target);
-	                  d.y = params.viz.y_scale(d.source);
-	            });
+	    // redefine x and y positions
+	    params.network_data.links.forEach(function (d) {
+	      d.x = params.viz.x_scale(d.target);
+	      d.y = params.viz.y_scale(d.source);
+	    });
 
-	            params.zoom_info = ini_zoom_info();
+	    params.zoom_info = ini_zoom_info();
 
-	            setTimeout(function () {
-	                  params.viz.run_trans = false;
-	            }, 2500);
+	    setTimeout(function () {
+	      params.viz.run_trans = false;
+	    }, 2500);
 
-	            // calculate downsmapling if necessary
-	            if (params.viz.ds_num_levels > 0 && params.viz.ds_level >= 0) {
+	    // calculate downsmapling if necessary
+	    if (params.viz.ds_num_levels > 0 && params.viz.ds_level >= 0) {
 
-	                  calc_downsampled_levels(params);
+	      calc_downsampled_levels(params);
 
-	                  // var zooming_stopped = true;
-	                  // var zooming_out = true;
-	                  // var make_all_rows = true;
-	                  // // show_visible_area is also run with two_translate_zoom, but at that point
-	                  // // the parameters were not updated and two_translate_zoom if only run
-	                  // // if needed to reset zoom
-	                  // show_visible_area(cgm, zooming_stopped, zooming_out, make_all_rows);
-	            }
-	      }
+	      // var zooming_stopped = true;
+	      // var zooming_out = true;
+	      // var make_all_rows = true;
+	      // // show_visible_area is also run with two_translate_zoom, but at that point
+	      // // the parameters were not updated and two_translate_zoom if only run
+	      // // if needed to reset zoom
+	      // show_visible_area(cgm, zooming_stopped, zooming_out, make_all_rows);
+	    }
+	  }
 		};
 
 /***/ }),
@@ -4493,38 +4493,38 @@ var Clustergrammer =
 
 	module.exports = function run_dendro_filter(cgm, d, inst_rc) {
 
-	    var names = {};
+	  var names = {};
 
-	    if (cgm.params.dendro_filter.row === false && cgm.params.dendro_filter.col === false && cgm.params.cat_filter.row === false && cgm.params.cat_filter.col === false) {
+	  if (cgm.params.dendro_filter.row === false && cgm.params.dendro_filter.col === false && cgm.params.cat_filter.row === false && cgm.params.cat_filter.col === false) {
 
-	        d3.select(cgm.params.root + ' .' + inst_rc + '_slider_group').style('opacity', 0.35).style('pointer-events', 'none');
+	    d3.select(cgm.params.root + ' .' + inst_rc + '_slider_group').style('opacity', 0.35).style('pointer-events', 'none');
 
-	        names[inst_rc] = d.all_names;
+	    names[inst_rc] = d.all_names;
 
-	        var tmp_names = cgm.params.network_data[inst_rc + '_nodes_names'];
+	    var tmp_names = cgm.params.network_data[inst_rc + '_nodes_names'];
 
-	        // keep a backup of the inst_view
-	        var inst_row_nodes = cgm.params.network_data.row_nodes;
-	        var inst_col_nodes = cgm.params.network_data.col_nodes;
+	    // keep a backup of the inst_view
+	    var inst_row_nodes = cgm.params.network_data.row_nodes;
+	    var inst_col_nodes = cgm.params.network_data.col_nodes;
 
-	        cgm.filter_viz_using_names(names);
+	    cgm.filter_viz_using_names(names);
 
-	        cgm.params.inst_nodes.row_nodes = inst_row_nodes;
-	        cgm.params.inst_nodes.col_nodes = inst_col_nodes;
+	    cgm.params.inst_nodes.row_nodes = inst_row_nodes;
+	    cgm.params.inst_nodes.col_nodes = inst_col_nodes;
 
-	        d3.selectAll(cgm.params.root + ' .dendro_shadow').transition().duration(1000).style('opacity', 0).remove();
+	    d3.selectAll(cgm.params.root + ' .dendro_shadow').transition().duration(1000).style('opacity', 0).remove();
 
-	        // keep the names of all the nodes
-	        cgm.params.dendro_filter[inst_rc] = tmp_names;
+	    // keep the names of all the nodes
+	    cgm.params.dendro_filter[inst_rc] = tmp_names;
 
-	        /* reset filter */
-	    } else {
+	    /* reset filter */
+	  } else {
 
-	        names[inst_rc] = cgm.params.dendro_filter[inst_rc];
+	    names[inst_rc] = cgm.params.dendro_filter[inst_rc];
 
-	        cgm.filter_viz_using_names(names);
-	        cgm.params.dendro_filter[inst_rc] = false;
-	    }
+	    cgm.filter_viz_using_names(names);
+	    cgm.params.dendro_filter[inst_rc] = false;
+	  }
 		};
 
 /***/ }),
@@ -4777,10 +4777,10 @@ var Clustergrammer =
 	  // Category-breakdown of dendrogram-clusters
 	  /////////////////////////////////////////////
 	  /*
-	    1. get information for nodes in cluster
+	   1. get information for nodes in cluster
 	  2. find category-types that are string-type
 	  3. count instances of each category name for each category-type
-	    */
+	   */
 
 	  // in case sim_mat
 	  if (inst_rc === 'both') {
@@ -5441,117 +5441,117 @@ var Clustergrammer =
 
 	module.exports = function col_reorder(cgm, col_selection, inst_term) {
 
-	    var params = cgm.params;
-	    var prev_zoom = get_previous_zoom(params);
+	  var params = cgm.params;
+	  var prev_zoom = get_previous_zoom(params);
 
-	    if (prev_zoom.zoom_y === 1 && prev_zoom.zoom_x === 1) {
+	  if (prev_zoom.zoom_y === 1 && prev_zoom.zoom_x === 1) {
 
-	        params.viz.inst_order.col = 'custom';
+	    params.viz.inst_order.col = 'custom';
 
-	        toggle_dendro_view(cgm, 'col');
+	    toggle_dendro_view(cgm, 'col');
 
-	        d3.selectAll(params.root + ' .toggle_row_order .btn').classed('active', false);
+	    d3.selectAll(params.root + ' .toggle_row_order .btn').classed('active', false);
 
-	        params.viz.run_trans = true;
+	    params.viz.run_trans = true;
 
-	        var mat = $.extend(true, {}, params.matrix.matrix);
-	        var row_nodes = params.network_data.row_nodes;
-	        var col_nodes = params.network_data.col_nodes;
+	    var mat = $.extend(true, {}, params.matrix.matrix);
+	    var row_nodes = params.network_data.row_nodes;
+	    var col_nodes = params.network_data.col_nodes;
 
-	        // find the column number of col_selection term from col_nodes
-	        // gather column node names
-	        var tmp_arr = [];
-	        col_nodes.forEach(function (node) {
-	            tmp_arr.push(node.name);
-	        });
+	    // find the column number of col_selection term from col_nodes
+	    // gather column node names
+	    var tmp_arr = [];
+	    col_nodes.forEach(function (node) {
+	      tmp_arr.push(node.name);
+	    });
 
-	        // find index
-	        var inst_col = _.indexOf(tmp_arr, inst_term);
+	    // find index
+	    var inst_col = _.indexOf(tmp_arr, inst_term);
 
-	        // gather the values of the input genes
-	        tmp_arr = [];
-	        row_nodes.forEach(function (node, index) {
-	            tmp_arr.push(mat[index].row_data[inst_col].value);
-	        });
+	    // gather the values of the input genes
+	    tmp_arr = [];
+	    row_nodes.forEach(function (node, index) {
+	      tmp_arr.push(mat[index].row_data[inst_col].value);
+	    });
 
-	        // sort the cols
-	        var tmp_sort = d3.range(tmp_arr.length).sort(function (a, b) {
-	            return tmp_arr[b] - tmp_arr[a];
-	        });
+	    // sort the cols
+	    var tmp_sort = d3.range(tmp_arr.length).sort(function (a, b) {
+	      return tmp_arr[b] - tmp_arr[a];
+	    });
 
-	        // resort rows (rows are reorderd by double clicking a col)
-	        params.viz.y_scale.domain(tmp_sort);
+	    // resort rows (rows are reorderd by double clicking a col)
+	    params.viz.y_scale.domain(tmp_sort);
 
-	        // save to custom row order
-	        params.matrix.orders.custom_col = tmp_sort;
+	    // save to custom row order
+	    params.matrix.orders.custom_col = tmp_sort;
 
-	        var t;
+	    var t;
 
-	        var row_nodes_names = params.network_data.row_nodes_names;
+	    var row_nodes_names = params.network_data.row_nodes_names;
 
-	        // reorder
-	        if (params.network_data.links.length > params.matrix.def_large_matrix) {
-	            t = d3.select(params.root + ' .viz_svg');
-	        } else {
-	            t = d3.select(params.root + ' .viz_svg').transition().duration(2500);
-	        }
-
-	        // reorder row_label_triangle groups
-	        t.selectAll('.row_cat_group').attr('transform', function (d) {
-	            var inst_index = _.indexOf(row_nodes_names, d.name);
-	            return 'translate(0,' + params.viz.y_scale(inst_index) + ')';
-	        });
-
-	        // Move Row Labels
-	        t.select('.row_label_zoom_container').selectAll('.row_label_group').attr('transform', function (d) {
-	            var inst_index = _.indexOf(row_nodes_names, d.name);
-	            return 'translate(0,' + params.viz.y_scale(inst_index) + ')';
-	        });
-
-	        // only update matri if not downsampled
-	        if (params.viz.ds_level === -1) {
-	            // reorder matrix rows
-	            t.selectAll('.row').attr('transform', function (d) {
-	                var inst_index = _.indexOf(row_nodes_names, d.name);
-	                return 'translate(0,' + params.viz.y_scale(inst_index) + ')';
-	            });
-	        }
-
-	        // highlight selected column
-	        ///////////////////////////////
-	        // unhilight and unbold all columns (already unbolded earlier)
-	        d3.selectAll(params.root + ' .col_label_text').select('.highlight_rect').style('opacity', 0);
-	        // highlight column name
-	        d3.select(col_selection).select('.highlight_rect').style('opacity', 1);
-
-	        // redefine x and y positions
-	        params.network_data.links.forEach(function (d) {
-	            d.x = params.viz.x_scale(d.target);
-	            d.y = params.viz.y_scale(d.source);
-	        });
-
-	        reposition_tile_highlight(params);
-
-	        params.zoom_info = ini_zoom_info();
-
-	        setTimeout(function () {
-	            params.viz.run_trans = false;
-	        }, 2500);
-
-	        // calculate downsmapling if necessary
-	        if (params.viz.ds_num_levels > 0 && params.viz.ds_level >= 0) {
-
-	            calc_downsampled_levels(params);
-
-	            var zooming_stopped = true;
-	            var zooming_out = true;
-	            var make_all_rows = true;
-	            // show_visible_area is also run with two_translate_zoom, but at that point
-	            // the parameters were not updated and two_translate_zoom if only run
-	            // if needed to reset zoom
-	            show_visible_area(cgm, zooming_stopped, zooming_out, make_all_rows);
-	        }
+	    // reorder
+	    if (params.network_data.links.length > params.matrix.def_large_matrix) {
+	      t = d3.select(params.root + ' .viz_svg');
+	    } else {
+	      t = d3.select(params.root + ' .viz_svg').transition().duration(2500);
 	    }
+
+	    // reorder row_label_triangle groups
+	    t.selectAll('.row_cat_group').attr('transform', function (d) {
+	      var inst_index = _.indexOf(row_nodes_names, d.name);
+	      return 'translate(0,' + params.viz.y_scale(inst_index) + ')';
+	    });
+
+	    // Move Row Labels
+	    t.select('.row_label_zoom_container').selectAll('.row_label_group').attr('transform', function (d) {
+	      var inst_index = _.indexOf(row_nodes_names, d.name);
+	      return 'translate(0,' + params.viz.y_scale(inst_index) + ')';
+	    });
+
+	    // only update matri if not downsampled
+	    if (params.viz.ds_level === -1) {
+	      // reorder matrix rows
+	      t.selectAll('.row').attr('transform', function (d) {
+	        var inst_index = _.indexOf(row_nodes_names, d.name);
+	        return 'translate(0,' + params.viz.y_scale(inst_index) + ')';
+	      });
+	    }
+
+	    // highlight selected column
+	    ///////////////////////////////
+	    // unhilight and unbold all columns (already unbolded earlier)
+	    d3.selectAll(params.root + ' .col_label_text').select('.highlight_rect').style('opacity', 0);
+	    // highlight column name
+	    d3.select(col_selection).select('.highlight_rect').style('opacity', 1);
+
+	    // redefine x and y positions
+	    params.network_data.links.forEach(function (d) {
+	      d.x = params.viz.x_scale(d.target);
+	      d.y = params.viz.y_scale(d.source);
+	    });
+
+	    reposition_tile_highlight(params);
+
+	    params.zoom_info = ini_zoom_info();
+
+	    setTimeout(function () {
+	      params.viz.run_trans = false;
+	    }, 2500);
+
+	    // calculate downsmapling if necessary
+	    if (params.viz.ds_num_levels > 0 && params.viz.ds_level >= 0) {
+
+	      calc_downsampled_levels(params);
+
+	      var zooming_stopped = true;
+	      var zooming_out = true;
+	      var make_all_rows = true;
+	      // show_visible_area is also run with two_translate_zoom, but at that point
+	      // the parameters were not updated and two_translate_zoom if only run
+	      // if needed to reset zoom
+	      show_visible_area(cgm, zooming_stopped, zooming_out, make_all_rows);
+	    }
+	  }
 		};
 
 /***/ }),
@@ -7316,78 +7316,78 @@ var Clustergrammer =
 
 	module.exports = function run_when_zoom_stopped(cgm) {
 
-	    var params = cgm.params;
+	  var params = cgm.params;
 
-	    var stop_attributes = check_zoom_stop_status(params);
+	  var stop_attributes = check_zoom_stop_status(params);
 
-	    if (stop_attributes === true) {
+	  if (stop_attributes === true) {
 
-	        // ///////////////////////////////////////////////
-	        // // zooming has stopped
-	        // ///////////////////////////////////////////////
-	        // console.log('\nZOOMING HAS ACTUALLY STOPPED\n============================');
-	        // console.log(params.zoom_info.zoom_y)
+	    // ///////////////////////////////////////////////
+	    // // zooming has stopped
+	    // ///////////////////////////////////////////////
+	    // console.log('\nZOOMING HAS ACTUALLY STOPPED\n============================');
+	    // console.log(params.zoom_info.zoom_y)
 
-	        _.each(['row', 'col'], function (inst_rc) {
+	    _.each(['row', 'col'], function (inst_rc) {
 
-	            d3.selectAll(params.root + ' .' + inst_rc + '_label_group').select('text').style('opacity', 1);
+	      d3.selectAll(params.root + ' .' + inst_rc + '_label_group').select('text').style('opacity', 1);
 
-	            d3.selectAll(params.root + ' .' + inst_rc + '_cat_group').select('path').style('display', 'block');
+	      d3.selectAll(params.root + ' .' + inst_rc + '_cat_group').select('path').style('display', 'block');
+	    });
+
+	    show_visible_area(cgm, true);
+
+	    d3.selectAll(params.viz.root_tips).style('display', 'block');
+
+	    d3.selectAll(params.root + ' .row_label_group').select('text').style('display', 'none');
+	    d3.selectAll(params.root + ' .row_label_group').select('text').style('display', 'block');
+
+	    d3.select(params.root + ' .viz_svg').attr('stopped_zoom', 0);
+
+	    d3.selectAll(params.root + ' .row_label_group').select('text').style('display', 'block');
+	    d3.selectAll(params.root + ' .col_label_group').select('text').style('display', 'block');
+
+	    toggle_grid_lines(params);
+
+	    // reset x_offset
+	    cgm.params.viz.x_offset = 0;
+
+	    var max_labels_to_trim = 150;
+	    // probably do not need
+	    /////////////////////////
+	    _.each(['row', 'col'], function (inst_rc) {
+
+	      var inst_num_visible = num_visible_labels(params, inst_rc);
+
+	      if (inst_num_visible < max_labels_to_trim) {
+	        d3.selectAll(params.root + ' .' + inst_rc + '_label_group').each(function () {
+	          trim_text(params, this, inst_rc);
 	        });
+	      }
+	    });
 
-	        show_visible_area(cgm, true);
+	    text_patch();
 
-	        d3.selectAll(params.viz.root_tips).style('display', 'block');
+	    constrain_font_size(params);
 
-	        d3.selectAll(params.root + ' .row_label_group').select('text').style('display', 'none');
-	        d3.selectAll(params.root + ' .row_label_group').select('text').style('display', 'block');
+	    // this makes sure that the text is visible after zooming and trimming
+	    // there is buggy behavior in chrome when zooming into large matrices
+	    // I'm running it twice in quick succession
+	    setTimeout(text_patch, 100);
+	  }
 
-	        d3.select(params.root + ' .viz_svg').attr('stopped_zoom', 0);
+	  function text_patch() {
 
-	        d3.selectAll(params.root + ' .row_label_group').select('text').style('display', 'block');
-	        d3.selectAll(params.root + ' .col_label_group').select('text').style('display', 'block');
+	    _.each(['row', 'col'], function (inst_rc) {
 
-	        toggle_grid_lines(params);
-
-	        // reset x_offset
-	        cgm.params.viz.x_offset = 0;
-
-	        var max_labels_to_trim = 150;
-	        // probably do not need
-	        /////////////////////////
-	        _.each(['row', 'col'], function (inst_rc) {
-
-	            var inst_num_visible = num_visible_labels(params, inst_rc);
-
-	            if (inst_num_visible < max_labels_to_trim) {
-	                d3.selectAll(params.root + ' .' + inst_rc + '_label_group').each(function () {
-	                    trim_text(params, this, inst_rc);
-	                });
-	            }
-	        });
-
-	        text_patch();
-
-	        constrain_font_size(params);
-
-	        // this makes sure that the text is visible after zooming and trimming
-	        // there is buggy behavior in chrome when zooming into large matrices
-	        // I'm running it twice in quick succession
-	        setTimeout(text_patch, 100);
-	    }
-
-	    function text_patch() {
-
-	        _.each(['row', 'col'], function (inst_rc) {
-
-	            d3.selectAll(params.root + ' .' + inst_rc + '_label_group').filter(function () {
-	                return d3.select(this).style('display') != 'none';
-	            }).select('text').style('font-size', function () {
-	                var inst_fs = Number(d3.select(this).style('font-size').replace('px', ''));
-	                return inst_fs;
-	            });
-	        });
-	    }
+	      d3.selectAll(params.root + ' .' + inst_rc + '_label_group').filter(function () {
+	        return d3.select(this).style('display') != 'none';
+	      }).select('text').style('font-size', function () {
+	        var inst_fs = Number(d3.select(this).style('font-size').replace('px', ''));
+	        return inst_fs;
+	      });
+	    });
+	  }
 		};
 
 /***/ }),
@@ -9312,59 +9312,59 @@ var Clustergrammer =
 
 	module.exports = function play_demo() {
 
-	    var cgm = this;
-	    var params = cgm.params;
+	  var cgm = this;
+	  var params = cgm.params;
 
-	    if (d3.select(params.root + ' .running_demo').empty()) {
+	  if (d3.select(params.root + ' .running_demo').empty()) {
 
-	        // prevent more than one demo from running at once
-	        d3.select(params.root + ' .play_button').classed('running_demo', true);
+	    // prevent more than one demo from running at once
+	    d3.select(params.root + ' .play_button').classed('running_demo', true);
 
-	        toggle_play_button(params, false);
+	    toggle_play_button(params, false);
 
-	        // prevent user interaction while playing
-	        $.blockUI({ css: {
-	                border: 'none',
-	                padding: '15px',
-	                backgroundColor: '#000',
-	                '-webkit-border-radius': '10px',
-	                '-moz-border-radius': '10px',
-	                opacity: 0,
-	                color: '#fff',
-	                cursor: 'default'
-	            } });
+	    // prevent user interaction while playing
+	    $.blockUI({ css: {
+	        border: 'none',
+	        padding: '15px',
+	        backgroundColor: '#000',
+	        '-webkit-border-radius': '10px',
+	        '-moz-border-radius': '10px',
+	        opacity: 0,
+	        color: '#fff',
+	        cursor: 'default'
+	      } });
 
-	        d3.selectAll('.blockUI').style('opacity', 0);
+	    d3.selectAll('.blockUI').style('opacity', 0);
 
-	        // intro text
-	        var inst_time = 750;
+	    // intro text
+	    var inst_time = 750;
 
-	        if (cgm.params.viz.is_expand === false) {
-	            inst_time = run_segment(params, inst_time, quick_cluster);
-	            inst_time = inst_time - 1500;
-	        }
-
-	        // clustergram interaction
-	        ///////////////////////////////////
-	        inst_time = run_segment(params, inst_time, play_intro);
-	        inst_time = run_segment(params, inst_time, play_zoom);
-	        inst_time = run_segment(cgm, inst_time, play_reset_zoom);
-	        inst_time = run_segment(params, inst_time, play_categories);
-	        inst_time = run_segment(params, inst_time, play_reorder_row);
-
-	        // sidebar interaction
-	        ///////////////////////////////////
-	        inst_time = run_segment(params, inst_time, play_menu_button);
-	        inst_time = run_segment(params, inst_time, play_groups);
-	        inst_time = run_segment(params, inst_time, play_reorder_buttons);
-	        inst_time = run_segment(params, inst_time, play_search);
-	        inst_time = run_segment(cgm, inst_time, play_filter);
-
-	        // conclusion
-	        ///////////////////////////////////
-	        inst_time = run_segment(params, inst_time, quick_cluster);
-	        inst_time = run_segment(params, inst_time, play_conclusion);
+	    if (cgm.params.viz.is_expand === false) {
+	      inst_time = run_segment(params, inst_time, quick_cluster);
+	      inst_time = inst_time - 1500;
 	    }
+
+	    // clustergram interaction
+	    ///////////////////////////////////
+	    inst_time = run_segment(params, inst_time, play_intro);
+	    inst_time = run_segment(params, inst_time, play_zoom);
+	    inst_time = run_segment(cgm, inst_time, play_reset_zoom);
+	    inst_time = run_segment(params, inst_time, play_categories);
+	    inst_time = run_segment(params, inst_time, play_reorder_row);
+
+	    // sidebar interaction
+	    ///////////////////////////////////
+	    inst_time = run_segment(params, inst_time, play_menu_button);
+	    inst_time = run_segment(params, inst_time, play_groups);
+	    inst_time = run_segment(params, inst_time, play_reorder_buttons);
+	    inst_time = run_segment(params, inst_time, play_search);
+	    inst_time = run_segment(cgm, inst_time, play_filter);
+
+	    // conclusion
+	    ///////////////////////////////////
+	    inst_time = run_segment(params, inst_time, quick_cluster);
+	    inst_time = run_segment(params, inst_time, play_conclusion);
+	  }
 		};
 
 /***/ }),
@@ -10966,28 +10966,28 @@ var Clustergrammer =
 
 	module.exports = function run_row_search(cgm, search_term, entities) {
 
-	    var prop = 'name';
+	  var prop = 'name';
 
-	    if (entities.indexOf(search_term) !== -1) {
+	  if (entities.indexOf(search_term) !== -1) {
 
-	        // unhighlight
-	        d3.selectAll(cgm.params.root + ' .row_label_group').select('rect').style('opacity', 0);
+	    // unhighlight
+	    d3.selectAll(cgm.params.root + ' .row_label_group').select('rect').style('opacity', 0);
 
-	        // calc pan_dy
-	        var idx = _.indexOf(entities, search_term);
-	        var inst_y_pos = cgm.params.viz.y_scale(idx);
-	        var pan_dy = cgm.params.viz.clust.dim.height / 2 - inst_y_pos;
+	    // calc pan_dy
+	    var idx = _.indexOf(entities, search_term);
+	    var inst_y_pos = cgm.params.viz.y_scale(idx);
+	    var pan_dy = cgm.params.viz.clust.dim.height / 2 - inst_y_pos;
 
-	        two_translate_zoom(cgm, 0, pan_dy, cgm.params.viz.zoom_switch);
+	    two_translate_zoom(cgm, 0, pan_dy, cgm.params.viz.zoom_switch);
 
-	        // set y zoom to zoom_switch
-	        cgm.params.zoom_info.zoom_y = cgm.params.viz.zoom_switch;
+	    // set y zoom to zoom_switch
+	    cgm.params.zoom_info.zoom_y = cgm.params.viz.zoom_switch;
 
-	        // highlight
-	        d3.selectAll(cgm.params.root + ' .row_label_group').filter(function (d) {
-	            return d[prop] === search_term;
-	        }).select('rect').style('opacity', 1);
-	    }
+	    // highlight
+	    d3.selectAll(cgm.params.root + ' .row_label_group').filter(function (d) {
+	      return d[prop] === search_term;
+	    }).select('rect').style('opacity', 1);
+	  }
 		};
 
 /***/ }),
@@ -11058,86 +11058,86 @@ var Clustergrammer =
 	var utils = __webpack_require__(2);
 
 	module.exports = function modify_row_node_cats(cat_data, inst_nodes) {
-	      var strip_names = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+	  var strip_names = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
 
-	      var cat_type_num = 0;
-	      var inst_index = 0;
-	      var inst_cat_title;
-	      var inst_cats;
-	      var inst_members;
-	      var inst_name;
-	      var inst_category;
-	      var inst_cat_name;
-	      var inst_full_cat;
-	      var inst_cat_num;
+	  var cat_type_num = 0;
+	  var inst_index = 0;
+	  var inst_cat_title;
+	  var inst_cats;
+	  var inst_members;
+	  var inst_name;
+	  var inst_category;
+	  var inst_cat_name;
+	  var inst_full_cat;
+	  var inst_cat_num;
 
-	      // loop through row nodes
-	      //////////////////////////
-	      _.each(inst_nodes, function (inst_node) {
+	  // loop through row nodes
+	  //////////////////////////
+	  _.each(inst_nodes, function (inst_node) {
 
-	            inst_name = inst_node.name;
+	    inst_name = inst_node.name;
 
-	            // not sure if this is needed
-	            // inst_name = inst_name.toUpperCase();
+	    // not sure if this is needed
+	    // inst_name = inst_name.toUpperCase();
 
-	            if (strip_names === true) {
-	                  // only consider first part of inst_name
-	                  ////////////////////////////////////////////
-	                  // may improve this
-	                  if (inst_name.indexOf(' ')) {
-	                        inst_name = inst_name.split(' ')[0];
-	                  } else if (inst_name.indexOf('_')) {
-	                        inst_name = inst_name.split('_')[0];
-	                  }
-	            }
+	    if (strip_names === true) {
+	      // only consider first part of inst_name
+	      ////////////////////////////////////////////
+	      // may improve this
+	      if (inst_name.indexOf(' ')) {
+	        inst_name = inst_name.split(' ')[0];
+	      } else if (inst_name.indexOf('_')) {
+	        inst_name = inst_name.split('_')[0];
+	      }
+	    }
 
-	            cat_type_num = 0;
+	    cat_type_num = 0;
 
-	            remove_node_cats(inst_node);
+	    remove_node_cats(inst_node);
 
-	            // loop through each category type
-	            _.each(cat_data, function (inst_cat_data) {
+	    // loop through each category type
+	    _.each(cat_data, function (inst_cat_data) {
 
-	                  inst_cat_title = inst_cat_data.cat_title;
-	                  inst_cats = inst_cat_data.cats;
+	      inst_cat_title = inst_cat_data.cat_title;
+	      inst_cats = inst_cat_data.cats;
 
-	                  // initialize with no category
-	                  inst_category = 'false';
-	                  inst_index = -1;
+	      // initialize with no category
+	      inst_category = 'false';
+	      inst_index = -1;
 
-	                  inst_cat_num = 0;
-	                  // loop through each category in the category-type
-	                  _.each(inst_cats, function (inst_cat) {
+	      inst_cat_num = 0;
+	      // loop through each category in the category-type
+	      _.each(inst_cats, function (inst_cat) {
 
-	                        inst_cat_name = inst_cat.cat_name;
-	                        inst_members = inst_cat.members;
+	        inst_cat_name = inst_cat.cat_name;
+	        inst_members = inst_cat.members;
 
-	                        // add category if node is a member
-	                        if (_.contains(inst_members, inst_name)) {
+	        // add category if node is a member
+	        if (_.contains(inst_members, inst_name)) {
 
-	                              inst_category = inst_cat_name;
-	                              inst_index = inst_cat_num;
-	                        }
+	          inst_category = inst_cat_name;
+	          inst_index = inst_cat_num;
+	        }
 
-	                        inst_cat_num = inst_cat_num + 1;
-	                  });
-
-	                  if (utils.has(inst_cat_data, 'pval')) {
-
-	                        var inst_pval = inst_cat_data.pval.toExponential();
-	                        inst_full_cat = inst_cat_title + ': ' + inst_category + '<p> Pval ' + String(inst_pval) + '</p>';
-	                  } else {
-
-	                        inst_full_cat = inst_cat_title + ': ' + inst_category;
-	                  }
-
-	                  inst_node['cat-' + String(cat_type_num)] = inst_full_cat;
-	                  inst_node['cat_' + String(cat_type_num) + '_index'] = inst_index;
-
-	                  cat_type_num = cat_type_num + 1;
-	            });
+	        inst_cat_num = inst_cat_num + 1;
 	      });
+
+	      if (utils.has(inst_cat_data, 'pval')) {
+
+	        var inst_pval = inst_cat_data.pval.toExponential();
+	        inst_full_cat = inst_cat_title + ': ' + inst_category + '<p> Pval ' + String(inst_pval) + '</p>';
+	      } else {
+
+	        inst_full_cat = inst_cat_title + ': ' + inst_category;
+	      }
+
+	      inst_node['cat-' + String(cat_type_num)] = inst_full_cat;
+	      inst_node['cat_' + String(cat_type_num) + '_index'] = inst_index;
+
+	      cat_type_num = cat_type_num + 1;
+	    });
+	  });
 		};
 
 /***/ }),
@@ -12382,119 +12382,119 @@ var Clustergrammer =
 
 	module.exports = function brush_crop_matrix() {
 
-	    // get rows/cols from brush-extent
-	    // works for differnt brushing directions (e.g. start end sites)
+	  // get rows/cols from brush-extent
+	  // works for differnt brushing directions (e.g. start end sites)
 
-	    var cgm = this;
-	    var params = cgm.params;
+	  var cgm = this;
+	  var params = cgm.params;
 
-	    var clust_width = params.viz.clust.dim.width;
-	    var clust_height = params.viz.clust.dim.height;
+	  var clust_width = params.viz.clust.dim.width;
+	  var clust_height = params.viz.clust.dim.height;
 
-	    var x = d3.scale.linear().domain([0, clust_width]).range([0, clust_width]);
-	    var y = d3.scale.linear().domain([0, clust_height]).range([0, clust_height]);
+	  var x = d3.scale.linear().domain([0, clust_width]).range([0, clust_width]);
+	  var y = d3.scale.linear().domain([0, clust_height]).range([0, clust_height]);
 
-	    // make brush group
-	    d3.select(params.root + ' .clust_container').append('g').classed('brush_group', true);
+	  // make brush group
+	  d3.select(params.root + ' .clust_container').append('g').classed('brush_group', true);
 
-	    cgm.params.is_cropping = true;
+	  cgm.params.is_cropping = true;
 
-	    var brush = d3.svg.brush().x(x).y(y).on("brushend", brushend);
+	  var brush = d3.svg.brush().x(x).y(y).on("brushend", brushend);
 
-	    d3.select(params.root + ' .brush_group').call(brush);
+	  d3.select(params.root + ' .brush_group').call(brush);
 
-	    function brushend() {
+	  function brushend() {
 
-	        // do not display dendro crop buttons when cropping with brushing
-	        d3.select(cgm.params.root + ' .col_dendro_icons_container').style('display', 'none');
-	        d3.select(cgm.params.root + ' .row_dendro_icons_container').style('display', 'none');
+	    // do not display dendro crop buttons when cropping with brushing
+	    d3.select(cgm.params.root + ' .col_dendro_icons_container').style('display', 'none');
+	    d3.select(cgm.params.root + ' .row_dendro_icons_container').style('display', 'none');
 
-	        var brushing_extent = brush.extent();
-	        var brush_start = brushing_extent[0];
-	        var brush_end = brushing_extent[1];
+	    var brushing_extent = brush.extent();
+	    var brush_start = brushing_extent[0];
+	    var brush_end = brushing_extent[1];
 
-	        var x_start = brush_start[0];
-	        var x_end = brush_end[0];
+	    var x_start = brush_start[0];
+	    var x_end = brush_end[0];
 
-	        var y_start = brush_start[1];
-	        var y_end = brush_end[1];
+	    var y_start = brush_start[1];
+	    var y_end = brush_end[1];
 
-	        if (x_start != x_end && y_start != y_end) {
+	    if (x_start != x_end && y_start != y_end) {
 
-	            setTimeout(deactivate_cropping, 500, cgm);
+	      setTimeout(deactivate_cropping, 500, cgm);
 
-	            // find cropped nodes
-	            var found_nodes = find_cropped_nodes(x_start, x_end, y_start, y_end, brush_start, brush_end);
+	      // find cropped nodes
+	      var found_nodes = find_cropped_nodes(x_start, x_end, y_start, y_end, brush_start, brush_end);
 
-	            cgm.filter_viz_using_names(found_nodes);
+	      cgm.filter_viz_using_names(found_nodes);
 
-	            d3.select(params.root + ' .crop_button').style('color', '#337ab7').classed('fa-crop', false).classed('fa-undo', true);
-	        }
+	      d3.select(params.root + ' .crop_button').style('color', '#337ab7').classed('fa-crop', false).classed('fa-undo', true);
+	    }
+	  }
+
+	  function find_cropped_nodes(x_start, x_end, y_start, y_end, brush_start, brush_end) {
+
+	    // reverse if necessary (depending on how brushing was done)
+	    if (x_start > x_end) {
+	      x_start = brush_end[0];
+	      x_end = brush_start[0];
 	    }
 
-	    function find_cropped_nodes(x_start, x_end, y_start, y_end, brush_start, brush_end) {
-
-	        // reverse if necessary (depending on how brushing was done)
-	        if (x_start > x_end) {
-	            x_start = brush_end[0];
-	            x_end = brush_start[0];
-	        }
-
-	        if (y_start > y_end) {
-	            y_start = brush_end[1];
-	            y_end = brush_start[1];
-	        }
-
-	        // add room to brushing
-	        y_start = y_start - params.viz.rect_height;
-	        x_start = x_start - params.viz.rect_width;
-
-	        var found_nodes = {};
-	        found_nodes.row = [];
-	        found_nodes.col = [];
-
-	        // d3.selectAll(params.root+' .row_label_group')
-	        //   .each(function(inst_row){
-
-	        //     // there is already bound data on the rows
-	        //     var inst_trans = d3.select(this)
-	        //       .attr('transform');
-
-	        //     var y_trans = Number(inst_trans.split(',')[1].split(')')[0]);
-
-	        //     if (y_trans > y_start && y_trans < y_end){
-
-	        //       found_nodes.row.push(inst_row.name);
-
-	        //     }
-
-	        //   });
-
-	        _.each(params.matrix.matrix, function (row_data) {
-	            var y_trans = params.viz.y_scale(row_data.row_index);
-
-	            if (y_trans > y_start && y_trans < y_end) {
-	                found_nodes.row.push(row_data.name);
-	            }
-	        });
-
-	        d3.selectAll(params.root + ' .col_label_text').each(function (inst_col) {
-
-	            // there is already bound data on the cols
-	            var inst_trans = d3.select(this).attr('transform');
-
-	            var x_trans = Number(inst_trans.split(',')[0].split('(')[1]);
-
-	            if (x_trans > x_start && x_trans < x_end) {
-
-	                found_nodes.col.push(inst_col.name);
-	            }
-	        });
-
-	        return found_nodes;
+	    if (y_start > y_end) {
+	      y_start = brush_end[1];
+	      y_end = brush_start[1];
 	    }
 
-	    d3.selectAll(params.root + ' .extent').style('opacity', 0.2).style('fill', 'black');
+	    // add room to brushing
+	    y_start = y_start - params.viz.rect_height;
+	    x_start = x_start - params.viz.rect_width;
+
+	    var found_nodes = {};
+	    found_nodes.row = [];
+	    found_nodes.col = [];
+
+	    // d3.selectAll(params.root+' .row_label_group')
+	    //   .each(function(inst_row){
+
+	    //     // there is already bound data on the rows
+	    //     var inst_trans = d3.select(this)
+	    //       .attr('transform');
+
+	    //     var y_trans = Number(inst_trans.split(',')[1].split(')')[0]);
+
+	    //     if (y_trans > y_start && y_trans < y_end){
+
+	    //       found_nodes.row.push(inst_row.name);
+
+	    //     }
+
+	    //   });
+
+	    _.each(params.matrix.matrix, function (row_data) {
+	      var y_trans = params.viz.y_scale(row_data.row_index);
+
+	      if (y_trans > y_start && y_trans < y_end) {
+	        found_nodes.row.push(row_data.name);
+	      }
+	    });
+
+	    d3.selectAll(params.root + ' .col_label_text').each(function (inst_col) {
+
+	      // there is already bound data on the cols
+	      var inst_trans = d3.select(this).attr('transform');
+
+	      var x_trans = Number(inst_trans.split(',')[0].split('(')[1]);
+
+	      if (x_trans > x_start && x_trans < x_end) {
+
+	        found_nodes.col.push(inst_col.name);
+	      }
+	    });
+
+	    return found_nodes;
+	  }
+
+	  d3.selectAll(params.root + ' .extent').style('opacity', 0.2).style('fill', 'black');
 		};
 
 /***/ }),
@@ -13413,7 +13413,7 @@ var Clustergrammer =
 
 
 	// module
-	exports.push([module.id, ".d3-slider {\r\n    position: relative;\r\n    font-family: Verdana,Arial,sans-serif;\r\n    font-size: 1.1em;\r\n    border: 1px solid #aaaaaa;\r\n    z-index: 2;\r\n}\r\n\r\n.d3-slider-horizontal {\r\n    height: .8em;\r\n}  \r\n\r\n.d3-slider-range {\r\n  background:#2980b9;\r\n  left:0px;\r\n  right:0px;\r\n  height: 0.8em;\r\n  position: absolute;\r\n}\r\n\r\n.d3-slider-range-vertical {\r\n  background:#2980b9;\r\n  left:0px;\r\n  right:0px;\r\n  position: absolute;\r\n  top:0;\r\n}\r\n\r\n.d3-slider-vertical {\r\n    width: .8em;\r\n    height: 100px;\r\n}      \r\n\r\n.d3-slider-handle {\r\n    position: absolute;\r\n    width: 1.2em;\r\n    height: 1.2em;\r\n    border: 1px solid #d3d3d3;\r\n    border-radius: 4px;\r\n    background: #eee;\r\n    background: linear-gradient(to bottom, #eee 0%, #ddd 100%);\r\n    z-index: 3;\r\n}\r\n\r\n.d3-slider-handle:hover {\r\n    border: 1px solid #999999;\r\n}\r\n\r\n.d3-slider-horizontal .d3-slider-handle {\r\n    top: -.3em;\r\n    margin-left: -.6em;\r\n}\r\n\r\n.d3-slider-axis {\r\n    position: relative;\r\n    z-index: 1;    \r\n}\r\n\r\n.d3-slider-axis-bottom {\r\n    top: .8em;\r\n}\r\n\r\n.d3-slider-axis-right {\r\n    left: .8em;\r\n}\r\n\r\n.d3-slider-axis path {\r\n    stroke-width: 0;\r\n    fill: none;\r\n}\r\n\r\n.d3-slider-axis line {\r\n    fill: none;\r\n    stroke: #aaa;\r\n    shape-rendering: crispEdges;\r\n}\r\n\r\n.d3-slider-axis text {\r\n    font-size: 11px;\r\n}\r\n\r\n.d3-slider-vertical .d3-slider-handle {\r\n    left: -.25em;\r\n    margin-left: 0;\r\n    margin-bottom: -.6em;      \r\n}", ""]);
+	exports.push([module.id, ".d3-slider {\n    position: relative;\n    font-family: Verdana,Arial,sans-serif;\n    font-size: 1.1em;\n    border: 1px solid #aaaaaa;\n    z-index: 2;\n}\n\n.d3-slider-horizontal {\n    height: .8em;\n}  \n\n.d3-slider-range {\n  background:#2980b9;\n  left:0px;\n  right:0px;\n  height: 0.8em;\n  position: absolute;\n}\n\n.d3-slider-range-vertical {\n  background:#2980b9;\n  left:0px;\n  right:0px;\n  position: absolute;\n  top:0;\n}\n\n.d3-slider-vertical {\n    width: .8em;\n    height: 100px;\n}      \n\n.d3-slider-handle {\n    position: absolute;\n    width: 1.2em;\n    height: 1.2em;\n    border: 1px solid #d3d3d3;\n    border-radius: 4px;\n    background: #eee;\n    background: linear-gradient(to bottom, #eee 0%, #ddd 100%);\n    z-index: 3;\n}\n\n.d3-slider-handle:hover {\n    border: 1px solid #999999;\n}\n\n.d3-slider-horizontal .d3-slider-handle {\n    top: -.3em;\n    margin-left: -.6em;\n}\n\n.d3-slider-axis {\n    position: relative;\n    z-index: 1;    \n}\n\n.d3-slider-axis-bottom {\n    top: .8em;\n}\n\n.d3-slider-axis-right {\n    left: .8em;\n}\n\n.d3-slider-axis path {\n    stroke-width: 0;\n    fill: none;\n}\n\n.d3-slider-axis line {\n    fill: none;\n    stroke: #aaa;\n    shape-rendering: crispEdges;\n}\n\n.d3-slider-axis text {\n    font-size: 11px;\n}\n\n.d3-slider-vertical .d3-slider-handle {\n    left: -.25em;\n    margin-left: 0;\n    margin-bottom: -.6em;      \n}", ""]);
 
 	// exports
 
@@ -13962,31 +13962,31 @@ var Clustergrammer =
 
 	module.exports = function run_filter_slider(cgm, filter_type, available_views, inst_index) {
 
-	    // only update if not running update
-	    if (d3.select(cgm.params.viz.viz_svg).classed('running_update') === false) {
+	  // only update if not running update
+	  if (d3.select(cgm.params.viz.viz_svg).classed('running_update') === false) {
 
-	        var params = cgm.params;
+	    var params = cgm.params;
 
-	        // get value
-	        var inst_state = available_views[inst_index][filter_type];
+	    // get value
+	    var inst_state = available_views[inst_index][filter_type];
 
-	        reset_other_filter_sliders(cgm, filter_type, inst_state);
+	    reset_other_filter_sliders(cgm, filter_type, inst_state);
 
-	        params = get_current_orders(params);
+	    params = get_current_orders(params);
 
-	        var requested_view = {};
-	        requested_view[filter_type] = inst_state;
+	    var requested_view = {};
+	    requested_view[filter_type] = inst_state;
 
-	        requested_view = make_requested_view(params, requested_view);
+	    requested_view = make_requested_view(params, requested_view);
 
-	        if (_.has(available_views[0], 'enr_score_type')) {
-	            var enr_state = d3.select(params.root + ' .toggle_enr_score_type').attr('current_state');
+	    if (_.has(available_views[0], 'enr_score_type')) {
+	      var enr_state = d3.select(params.root + ' .toggle_enr_score_type').attr('current_state');
 
-	            requested_view.enr_score_type = enr_state;
-	        }
-
-	        update_viz_with_view(cgm, requested_view);
+	      requested_view.enr_score_type = enr_state;
 	    }
+
+	    update_viz_with_view(cgm, requested_view);
+	  }
 		};
 
 /***/ }),
@@ -14193,34 +14193,34 @@ var Clustergrammer =
 
 	module.exports = function set_sidebar_ini_view(params) {
 
-	    _.each(_.keys(params.ini_view), function (inst_filter) {
+	  _.each(_.keys(params.ini_view), function (inst_filter) {
 
-	        // initialize filter slider using ini_view
-	        var inst_value = params.ini_view[inst_filter];
+	    // initialize filter slider using ini_view
+	    var inst_value = params.ini_view[inst_filter];
 
-	        var filter_type = params.viz.possible_filters[inst_filter];
+	    var filter_type = params.viz.possible_filters[inst_filter];
 
-	        if (filter_type === 'numerical') {
+	    if (filter_type === 'numerical') {
 
-	            if (inst_value != 'all') {
-	                inst_value = parseInt(inst_value, 10);
-	            }
+	      if (inst_value != 'all') {
+	        inst_value = parseInt(inst_value, 10);
+	      }
 
-	            if (params.viz.filter_data[inst_filter].indexOf(inst_value) <= -1) {
-	                inst_value = 'all';
-	            }
+	      if (params.viz.filter_data[inst_filter].indexOf(inst_value) <= -1) {
+	        inst_value = 'all';
+	      }
 
-	            var filter_title = make_filter_title(params, inst_filter);
+	      var filter_title = make_filter_title(params, inst_filter);
 
-	            d3.select(params.root + ' .title_' + inst_filter).text(filter_title.text + inst_value + filter_title.suffix);
+	      d3.select(params.root + ' .title_' + inst_filter).text(filter_title.text + inst_value + filter_title.suffix);
 
-	            d3.select(params.root + ' .slider_' + inst_filter).attr('current_state', inst_value);
-	        } else {
+	      d3.select(params.root + ' .slider_' + inst_filter).attr('current_state', inst_value);
+	    } else {
 
-	            // set up button initialization
+	      // set up button initialization
 
-	        }
-	    });
+	    }
+	  });
 		};
 
 /***/ }),
@@ -14866,6 +14866,16 @@ var Clustergrammer =
 	  gene_modal.body.append('div').append('p').classed('gene_text', true);
 
 	  gene_modal.body.append('a').classed('splicing_link', true).attr("xlink:href", "#").html('Splicing info');
+
+	  // string network modal
+	  ///////////////////////////////////////
+	  var string_modal = make_modal_skeleton(params, 'string_info');
+
+	  string_modal.header.append('h4').classed('modal-title', true).html('Requesting StringDB data');
+
+	  string_modal.body.append('g').classed('cluster_info_container', true);
+
+	  string_modal.body.append('div').classed('gene_text', true);
 		};
 
 /***/ }),
